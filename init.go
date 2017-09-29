@@ -1,4 +1,4 @@
-package main
+package msisdn
 
 import (
 	"bufio"
@@ -10,7 +10,7 @@ import (
 var countries map[string]string
 var operators map[string]string
 
-func main() {
+func init() {
 	err := loadData()
 	if err != nil {
 		log.Fatalln(err)

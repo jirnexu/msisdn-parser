@@ -9,20 +9,8 @@ import (
 type MSISDN struct {
 	msisdn      string
 	countryCode string
+	landline    bool
 	provider    string
-}
-
-//
-func (m *MSISDN) IsLandLine() bool {
-	if m.countryCode == "MY" {
-		if !strings.HasPrefix(m.msisdn, "601") {
-			return true
-		}
-	}
-	if strings.HasPrefix(m.msisdn, "1800") {
-		return true
-	}
-	return false
 }
 
 //
@@ -33,6 +21,11 @@ func (m *MSISDN) GetProvider() string {
 //
 func (m *MSISDN) GetCountryCode() string {
 	return m.countryCode
+}
+
+//
+func (m *MSISDN) IsLandLine() bool {
+	return m.landline
 }
 
 //
@@ -50,7 +43,22 @@ func (m *MSISDN) Parse(msisdn string) bool {
 		prefix := m.msisdn[:4]
 		m.provider = operators[prefix]
 	}
+
+	m.landline = m.isLandLine()
+
 	return true
+}
+
+func (m *MSISDN) isLandLine() bool {
+	if strings.HasPrefix(m.msisdn, "1800") {
+		return true
+	}
+	if m.countryCode == "MY" {
+		if !strings.HasPrefix(m.msisdn, "601") {
+			return true
+		}
+	}
+	return false
 }
 
 func (m *MSISDN) validate() bool {

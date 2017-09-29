@@ -36,8 +36,9 @@ func (m *MSISDN) IsLandLine() bool {
 
 //
 func (m *MSISDN) Parse(msisdn string) error {
-	m.msisdn = strings.TrimLeft(msisdn, "+")
+	m.msisdn = strings.TrimLeft(msisdn, " +")
 	m.msisdn = strings.TrimSpace(m.msisdn)
+
 	if !m.validate() {
 		return fmt.Errorf("MSISDN is invalid")
 	}

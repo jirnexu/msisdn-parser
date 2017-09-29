@@ -1,9 +1,5 @@
 package msisdn
 
-import (
-	"log"
-)
-
 type provider struct {
 	startRange int
 	endRange   int
@@ -19,13 +15,6 @@ var myProviders map[string]provider
 var myProviders2 []provider
 
 func init() {
-	err := loadData()
-	if err != nil {
-		log.Fatalln(err) // fixme: no error
-	}
-}
-
-func loadData() error {
 	countries = make(map[string]string, 3)
 	countries = map[string]string{
 		"60": "MY",
@@ -136,5 +125,4 @@ func loadData() error {
 		{startRange: 62300000, endRange: 62399999, name: "U Mobile Sdn Bhd"},
 		{startRange: 62400000, endRange: 62499999, name: "U Mobile Sdn Bhd"},
 	}
-	return nil
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -29,11 +30,11 @@ func (m *MSISDN) IsLandLine() bool {
 }
 
 //
-func (m *MSISDN) Parse(msisdn string) bool {
+func (m *MSISDN) Parse(msisdn string) error {
 	m.msisdn = strings.TrimLeft(msisdn, "+")
 	m.msisdn = strings.TrimSpace(m.msisdn)
 	if !m.validate() {
-		return false
+		return fmt.Errorf("MSISDN is invalid")
 	}
 
 	prefix := m.msisdn[:2]
@@ -46,7 +47,7 @@ func (m *MSISDN) Parse(msisdn string) bool {
 
 	m.landline = m.isLandLine()
 
-	return true
+	return nil
 }
 
 func (m *MSISDN) isLandLine() bool {

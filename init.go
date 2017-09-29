@@ -29,7 +29,7 @@ func loadData() error {
 		countries[prefix] = countryCode
 	}
 
-	d, err = readFile("data/operators.csv")
+	d, err = readFile("data/providers.csv")
 	if err != nil {
 		return err
 	}

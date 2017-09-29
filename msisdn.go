@@ -79,10 +79,13 @@ func (m *MSISDN) isLandLine() bool {
 	if strings.HasPrefix(m.msisdn, "1800") {
 		return true
 	}
-	if m.countryCode == "MY" {
+	switch m.countryCode {
+	case "MY":
 		if !strings.HasPrefix(m.msisdn, "601") {
 			return true
 		}
+	default:
+		return false
 	}
 	return false
 }

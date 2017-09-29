@@ -47,7 +47,7 @@ func (m *MSISDN) Parse(msisdn string) error {
 
 	if m.countryCode != "" {
 		prefix := m.msisdn[:4]
-		m.provider = operators[prefix]
+		m.provider = providers[prefix].name
 	}
 
 	m.landline = m.isLandLine()

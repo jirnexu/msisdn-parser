@@ -1,14 +1,16 @@
 package msisdn
 
 import (
-	"bufio"
-	"encoding/csv"
 	"log"
-	"os"
 )
 
+type provider struct {
+	countryCode string
+	name        string
+}
+
 var countries map[string]string
-var operators map[string]string
+var providers map[string]provider
 
 func init() {
 	err := loadData()
@@ -18,39 +20,59 @@ func init() {
 }
 
 func loadData() error {
-	d, err := readFile("data/countries.csv")
-	if err != nil {
-		return err
-	}
-	countries = make(map[string]string, len(d))
-	for _, v := range d {
-		prefix := v[0]
-		countryCode := v[1]
-		countries[prefix] = countryCode
+	countries = make(map[string]string, 3)
+	countries = map[string]string{
+		"60": "MY",
+		"62": "ID",
+		"65": "SG",
 	}
 
-	d, err = readFile("data/providers.csv")
-	if err != nil {
-		return err
-	}
-	operators = make(map[string]string, len(d))
-	for _, v := range d {
-		prefix := v[1]
-		operator := v[2]
-		operators[prefix] = operator
+	providers = make(map[string]provider, 0)
+	providers = map[string]provider{
+		"6010": {
+			countryCode: "MY",
+			name:        "Digi",
+		},
+		"6012": {
+			countryCode: "MY",
+			name:        "Maxis",
+		},
+		"6013": {
+			countryCode: "MY",
+			name:        "Celcom",
+		},
+		"60142": {
+			countryCode: "MY",
+			name:        "Maxis",
+		},
+		"60143": {
+			countryCode: "MY",
+			name:        "Digi",
+		},
+		"60146": {
+			countryCode: "MY",
+			name:        "Digi",
+		},
+		"60149": {
+			countryCode: "MY",
+			name:        "Digi",
+		},
+		"6016": {
+			countryCode: "MY",
+			name:        "Digi",
+		},
+		"6017": {
+			countryCode: "MY",
+			name:        "Maxis",
+		},
+		"6018": {
+			countryCode: "MY",
+			name:        "U Mobile",
+		},
+		"6019": {
+			countryCode: "MY",
+			name:        "Celcom",
+		},
 	}
 	return nil
-}
-
-func readFile(filename string) ([][]string, error) {
-	f, err := os.Open(filename)
-	if err != nil {
-		return nil, err
-	}
-	r := csv.NewReader(bufio.NewReader(f))
-	rows, err := r.ReadAll()
-	if err != nil {
-		return nil, err
-	}
-	return rows, nil
 }

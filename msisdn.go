@@ -15,6 +15,11 @@ type MSISDN struct {
 }
 
 //
+func (m *MSISDN) GetMSISDN() string {
+	return m.msisdn
+}
+
+//
 func (m *MSISDN) GetProvider() string {
 	return m.provider
 }

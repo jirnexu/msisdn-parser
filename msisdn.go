@@ -47,13 +47,29 @@ func (m *MSISDN) Parse(msisdn string) error {
 	m.countryCode = countries[prefix]
 
 	if m.countryCode != "" {
-		prefix := m.msisdn[:4]
-		m.provider = providers[prefix].name
+		m.provider = m.getProvider()
 	}
 
 	m.landline = m.isLandLine()
 
 	return nil
+}
+
+func (m *MSISDN) getProvider() string {
+	prefix := m.msisdn[:4]
+	subscriberNumber := m.msisdn[4:]
+	sn, _ := strconv.Atoi(subscriberNumber)
+	switch prefix {
+	case "6011":
+		for _, p := range myProviders2 {
+			if sn >= p.startRange && sn <= p.endRange {
+				return p.name
+			}
+		}
+	default:
+		return myProviders[prefix].name
+	}
+	return ""
 }
 
 func (m *MSISDN) isLandLine() bool {

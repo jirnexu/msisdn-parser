@@ -66,6 +66,9 @@ func (m *MSISDN) getProvider() string {
 				return p.name
 			}
 		}
+	case "6014":
+		prefix = m.msisdn[:5]
+		return myProviders[prefix].name
 	default:
 		return myProviders[prefix].name
 	}

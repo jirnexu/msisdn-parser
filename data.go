@@ -21,7 +21,7 @@ func init() {
 		"MY": {
 			countryCode: "60",
 			minLength:   8,
-			maxLength:   11,
+			maxLength:   12,
 			providers: []provider{
 				// 7-digit numbers
 				{startRange: 60100000000, endRange: 60109999999, name: "Digi Telecommunications Sdn Bhd"},

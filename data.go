@@ -8,8 +8,8 @@ type country struct {
 }
 
 type provider struct {
-	startRange int
-	endRange   int
+	startRange int64
+	endRange   int64
 	name       string
 }
 

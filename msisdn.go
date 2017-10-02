@@ -43,13 +43,8 @@ func (m *MSISDN) Parse(msisdn string) error {
 		return fmt.Errorf("MSISDN is invalid")
 	}
 
-	prefix := m.msisdn[:2]
-	m.countryCode = countries[prefix]
-
-	if m.countryCode != "" {
-		m.provider = m.getProvider()
-	}
-
+	m.countryCode = m.getCountryCode()
+	m.provider = m.getProvider()
 	m.landline = m.isLandLine()
 
 	return nil
@@ -67,22 +62,28 @@ func (m *MSISDN) LocalToMSISDN(phone string) string {
 	return fmt.Sprintf("6%s", phone)
 }
 
-func (m *MSISDN) getProvider() string {
-	prefix := m.msisdn[:4]
-	subscriberNumber := m.msisdn[4:]
-	sn, _ := strconv.Atoi(subscriberNumber)
-	switch prefix {
-	case "6011":
-		for _, p := range myProviders2 {
-			if sn >= p.startRange && sn <= p.endRange {
-				return p.name
-			}
+func (m *MSISDN) getCountryCode() string {
+	prefix := m.msisdn[:2]
+	for cc, country := range countries {
+		if prefix == country.countryCode {
+			return cc
 		}
-	case "6014":
-		prefix = m.msisdn[:5]
-		return myProviders[prefix].name
-	default:
-		return myProviders[prefix].name
+	}
+	return ""
+}
+
+func (m *MSISDN) getProvider() string {
+	if m.countryCode == "" {
+		return ""
+	}
+
+	subscriberNumber, _ := strconv.Atoi(m.msisdn)
+	sn := int64(subscriberNumber)
+
+	for _, p := range countries[m.countryCode].providers {
+		if sn >= p.startRange && sn <= p.endRange {
+			return p.name
+		}
 	}
 	return ""
 }

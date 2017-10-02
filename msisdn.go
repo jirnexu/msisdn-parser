@@ -50,14 +50,14 @@ func (m *MSISDN) Parse(msisdn string) error {
 
 //
 func (m *MSISDN) LocalToMSISDN(phone string) string {
-	if strings.HasPrefix(phone, "60") ||
-		strings.HasPrefix(phone, "65") ||
-		strings.HasPrefix(phone, "62") ||
+	if strings.HasPrefix(phone, "+60") ||
+		strings.HasPrefix(phone, "+65") ||
+		strings.HasPrefix(phone, "+62") ||
 		strings.HasPrefix(phone, "1800") {
 		return phone
 	}
 	// FIXME: handle by country code. Now only support MY
-	return fmt.Sprintf("6%s", phone)
+	return fmt.Sprintf("+6%s", phone)
 }
 
 func (m *MSISDN) getCountryCode() string {

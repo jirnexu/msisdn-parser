@@ -38,12 +38,10 @@ func (m *MSISDN) IsLandLine() bool {
 func (m *MSISDN) Parse(msisdn string) error {
 	m.msisdn = strings.TrimLeft(msisdn, " +")
 	m.msisdn = strings.TrimSpace(m.msisdn)
-
+	m.countryCode = m.getCountryCode()
 	if !m.validate() {
 		return fmt.Errorf("MSISDN is invalid")
 	}
-
-	m.countryCode = m.getCountryCode()
 	m.provider = m.getProvider()
 	m.landline = m.isLandLine()
 
@@ -109,12 +107,12 @@ func (m *MSISDN) validate() bool {
 	if err != nil {
 		return false
 	}
-	// length must greater than reserved digit for country code
-	if len(m.msisdn) < 4 {
-		return false
-	}
 	// must not exceed 15 digits
 	if len(m.msisdn) > 15 {
+		return false
+	}
+	country := countries[m.countryCode]
+	if len(m.msisdn) < country.minLength || len(m.msisdn) > country.maxLength {
 		return false
 	}
 	return true

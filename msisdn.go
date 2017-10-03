@@ -2,6 +2,7 @@ package msisdn
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -36,15 +37,13 @@ func (m *MSISDN) IsLandLine() bool {
 
 //
 func (m *MSISDN) Parse(msisdn string) error {
-	m.msisdn = strings.TrimLeft(msisdn, " +")
-	m.msisdn = strings.TrimSpace(m.msisdn)
+	m.msisdn = m.trim(msisdn)
 	m.countryCode = m.getCountryCode()
 	if !m.validate() {
 		return fmt.Errorf("MSISDN is invalid")
 	}
 	m.provider = m.getProvider()
 	m.landline = m.isLandLine()
-
 	return nil
 }
 
@@ -116,4 +115,9 @@ func (m *MSISDN) validate() bool {
 		return false
 	}
 	return true
+}
+
+func (m *MSISDN) trim(s string) string {
+	notWordRE := regexp.MustCompile(`[\W_]`)
+	return notWordRE.ReplaceAllString(s, "")
 }

@@ -49,14 +49,17 @@ func (m *MSISDN) Parse(msisdn string) error {
 
 //
 func (m *MSISDN) LocalToMSISDN(phone string) string {
-	if strings.HasPrefix(phone, "60") ||
-		strings.HasPrefix(phone, "65") ||
-		strings.HasPrefix(phone, "62") ||
-		strings.HasPrefix(phone, "1800") {
+	phone = m.trim(phone)
+	if m.isMSISDN(phone) {
 		return phone
 	}
 	// FIXME: handle by country code. Now only support MY
-	return fmt.Sprintf("6%s", phone)
+	msisdn := fmt.Sprintf("6%s", phone)
+	err := m.Parse(msisdn)
+	if err != nil {
+		return ""
+	}
+	return msisdn
 }
 
 func (m *MSISDN) getCountryCode() string {
@@ -83,6 +86,22 @@ func (m *MSISDN) getProvider() string {
 		}
 	}
 	return ""
+}
+
+func (m *MSISDN) isMSISDN(s string) bool {
+	if strings.HasPrefix(s, "1800") {
+		return true
+	}
+	for _, country := range countries {
+		if strings.HasPrefix(s, country.countryCode) {
+			err := m.Parse(s)
+			if err != nil {
+				return false
+			}
+			return true
+		}
+	}
+	return false
 }
 
 func (m *MSISDN) isLandLine() bool {

@@ -62,6 +62,23 @@ func (m *MSISDN) LocalToMSISDN(phone string) string {
 	return msisdn
 }
 
+//
+func (m *MSISDN) MSISDNToLocal(msisdn string) string {
+	msisdn = m.trim(msisdn)
+	if !m.isMSISDN(msisdn) {
+		return ""
+	}
+	if strings.HasPrefix(msisdn, "1800") {
+		return msisdn
+	}
+
+	// FIXME: handle by country code. Now only support MY
+	if !strings.HasPrefix(msisdn, "60") {
+		return ""
+	}
+	return msisdn[1:]
+}
+
 func (m *MSISDN) getCountryCode() string {
 	prefix := m.msisdn[:2]
 	for cc, country := range countries {

@@ -3,8 +3,10 @@ package msisdn
 type country struct {
 	providers   []provider
 	countryCode string
-	minLength   int
-	maxLength   int
+	localPrefix string
+
+	minLength int
+	maxLength int
 }
 
 type provider struct {
@@ -20,6 +22,7 @@ func init() {
 	countries = map[string]country{
 		"MY": {
 			countryCode: "60",
+			localPrefix: "0",
 			minLength:   8,
 			maxLength:   12,
 			providers: []provider{
@@ -131,6 +134,9 @@ func init() {
 		},
 		"SG": {
 			countryCode: "65",
+			localPrefix: "",
+			minLength:   8,
+			maxLength:   12,
 		},
 	}
 }

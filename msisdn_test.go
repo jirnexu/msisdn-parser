@@ -6,15 +6,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// import (
-// 	"context"
-// 	"testing"
-
-// 	"bitbucket.org/ascensionlab/sdk/sdkerr"
-// 	"bitbucket.org/ascensionlab/sdk/service/basenlp"
-// 	"github.com/stretchr/testify/assert"
-// )
-
 func Test_GetLocal(t *testing.T) {
 	testMap := map[string]string{
 		"+60312341234":    "0312341234",  // Malaysia

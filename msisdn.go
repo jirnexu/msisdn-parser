@@ -40,19 +40,21 @@ func ParseMSISDN(msisdn string) (*MSISDN, error) {
 	return m, nil
 }
 
-// countryCode: support "MY", "ID", "SG"
-func ParseLocal(phone string, countryCode string) (*MSISDN, error) {
+// phone: can be MSISDN or local number
+// countryCode: needed only if `phone` is a local number, support "MY", "ID", "SG"
+func Parse(phone string, countryCode string) (*MSISDN, error) {
 	phone = trim(phone)
 	if isMSISDN(phone) {
 		return ParseMSISDN(phone)
 	}
-
 	country, ok := countries[countryCode]
 	if !ok {
 		return nil, fmt.Errorf("unsupported countryCode=%#v", countryCode)
 	}
-
-	msisdn := country.areaCode + countryCode
+	if country.localPrefix != "" && strings.HasPrefix(phone, country.localPrefix) {
+		phone = phone[len(country.localPrefix):]
+	}
+	msisdn := country.areaCode + phone
 	return ParseMSISDN(msisdn)
 }
 

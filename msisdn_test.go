@@ -6,6 +6,30 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func Test_Parse(t *testing.T) {
+	{
+		m, err := Parse("0312341234", "MY")
+		if err != nil {
+			panic(err)
+		}
+		assert.Equal(t, "60312341234", m.GetMSISDN())
+	}
+	{
+		m, err := Parse("6031231234", "MY")
+		if err != nil {
+			panic(err)
+		}
+		assert.Equal(t, "6031231234", m.GetMSISDN())
+	}
+	{
+		m, err := Parse("88262323", "SG")
+		if err != nil {
+			panic(err)
+		}
+		assert.Equal(t, "6588262323", m.GetMSISDN())
+	}
+}
+
 func Test_GetLocal(t *testing.T) {
 	testMap := map[string]string{
 		"+60312341234":    "0312341234",  // Malaysia

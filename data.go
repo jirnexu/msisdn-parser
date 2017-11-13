@@ -25,7 +25,7 @@ type provider struct {
 	name       string
 }
 
-var countries = map[string]country{
+var countries = map[string]*country{
 	"MY": {
 		areaCode:    "60",
 		localPrefix: "0",

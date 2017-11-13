@@ -11,7 +11,7 @@ type phoneFormat struct {
 
 type country struct {
 	providers    []provider
-	countryCode  string
+	areaCode     string
 	localPrefix  string
 	localFormats []phoneFormat
 
@@ -31,7 +31,7 @@ func init() {
 	countries = make(map[string]country, 0)
 	countries = map[string]country{
 		"MY": {
-			countryCode: "60",
+			areaCode:    "60",
 			localPrefix: "0",
 			minLength:   8,
 			maxLength:   12,
@@ -150,7 +150,7 @@ func init() {
 			},
 		},
 		"ID": {
-			countryCode: "62",
+			areaCode:    "62",
 			localPrefix: "",
 			minLength:   8,
 			maxLength:   12,
@@ -166,7 +166,7 @@ func init() {
 			},
 		},
 		"SG": {
-			countryCode: "65",
+			areaCode:    "65",
 			localPrefix: "",
 			minLength:   8,
 			maxLength:   12,

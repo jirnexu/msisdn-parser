@@ -17,7 +17,7 @@ func isMSISDN(s string) bool {
 		return true
 	}
 	for _, country := range countries {
-		if strings.HasPrefix(s, country.countryCode) {
+		if strings.HasPrefix(s, country.areaCode) {
 			_, err := ParseMSISDN(s)
 			if err != nil {
 				return false
@@ -52,7 +52,7 @@ func ParseLocal(phone string, countryCode string) (*MSISDN, error) {
 		return nil, fmt.Errorf("unsupported countryCode=%#v", countryCode)
 	}
 
-	msisdn := country.countryCode + countryCode
+	msisdn := country.areaCode + countryCode
 	return ParseMSISDN(msisdn)
 }
 
@@ -94,7 +94,7 @@ func (m *MSISDN) GetLocal() string {
 	if !ok {
 		return ""
 	}
-	return country.localPrefix + msisdn[len(country.countryCode):]
+	return country.localPrefix + msisdn[len(country.areaCode):]
 }
 
 func (m *MSISDN) GetLocalFormatted() string {
@@ -115,7 +115,7 @@ func (m *MSISDN) GetLocalFormatted() string {
 func (m *MSISDN) getCountryCode() string {
 	prefix := m.msisdn[:2]
 	for cc, country := range countries {
-		if prefix == country.countryCode {
+		if prefix == country.areaCode {
 			return cc
 		}
 	}

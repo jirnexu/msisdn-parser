@@ -40,15 +40,19 @@ func ParseMSISDN(msisdn string) (*MSISDN, error) {
 	return m, nil
 }
 
-func ParseLocal(phone string) (*MSISDN, error) {
+// countryCode: support "MY", "ID", "SG"
+func ParseLocal(phone string, countryCode string) (*MSISDN, error) {
 	phone = trim(phone)
 	if isMSISDN(phone) {
 		return ParseMSISDN(phone)
 	}
 
-	// FIXME: how do we know which country is it? need to add a countryCode argument?
-	// FIXME: handle by country code. Now only support MY
-	msisdn := fmt.Sprintf("6%s", phone)
+	country, ok := countries[countryCode]
+	if !ok {
+		return nil, fmt.Errorf("unsupported countryCode=%#v", countryCode)
+	}
+
+	msisdn := country.countryCode + countryCode
 	return ParseMSISDN(msisdn)
 }
 

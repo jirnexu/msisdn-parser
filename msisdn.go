@@ -81,11 +81,8 @@ func (m *MSISDN) IsLandLine() bool {
 }
 
 //
-func (m *MSISDN) MSISDNToLocal(msisdn string) string {
-	msisdn = trim(msisdn)
-	if !isMSISDN(msisdn) {
-		return ""
-	}
+func (m *MSISDN) GetLocal() string {
+	msisdn := m.msisdn
 	if strings.HasPrefix(msisdn, "1800") {
 		return msisdn
 	}

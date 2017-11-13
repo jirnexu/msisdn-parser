@@ -7,6 +7,51 @@ import (
 	"strings"
 )
 
+func trim(s string) string {
+	notWordRE := regexp.MustCompile(`[\W_]`)
+	return notWordRE.ReplaceAllString(s, "")
+}
+
+func isMSISDN(s string) bool {
+	if strings.HasPrefix(s, "1800") {
+		return true
+	}
+	for _, country := range countries {
+		if strings.HasPrefix(s, country.countryCode) {
+			_, err := ParseMSISDN(s)
+			if err != nil {
+				return false
+			}
+			return true
+		}
+	}
+	return false
+}
+
+func ParseMSISDN(msisdn string) (*MSISDN, error) {
+	m := &MSISDN{}
+	m.msisdn = trim(msisdn)
+	m.countryCode = m.getCountryCode()
+	if !m.validate() {
+		return nil, fmt.Errorf("MSISDN is invalid")
+	}
+	m.provider = m.getProvider()
+	m.landline = m.isLandLine()
+	return m, nil
+}
+
+func ParseLocal(phone string) (*MSISDN, error) {
+	phone = trim(phone)
+	if isMSISDN(phone) {
+		return ParseMSISDN(phone)
+	}
+
+	// FIXME: how do we know which country is it? need to add a countryCode argument?
+	// FIXME: handle by country code. Now only support MY
+	msisdn := fmt.Sprintf("6%s", phone)
+	return ParseMSISDN(msisdn)
+}
+
 //
 type MSISDN struct {
 	msisdn      string
@@ -36,36 +81,9 @@ func (m *MSISDN) IsLandLine() bool {
 }
 
 //
-func (m *MSISDN) Parse(msisdn string) error {
-	m.msisdn = m.trim(msisdn)
-	m.countryCode = m.getCountryCode()
-	if !m.validate() {
-		return fmt.Errorf("MSISDN is invalid")
-	}
-	m.provider = m.getProvider()
-	m.landline = m.isLandLine()
-	return nil
-}
-
-//
-func (m *MSISDN) LocalToMSISDN(phone string) string {
-	phone = m.trim(phone)
-	if m.isMSISDN(phone) {
-		return phone
-	}
-	// FIXME: handle by country code. Now only support MY
-	msisdn := fmt.Sprintf("6%s", phone)
-	err := m.Parse(msisdn)
-	if err != nil {
-		return ""
-	}
-	return msisdn
-}
-
-//
 func (m *MSISDN) MSISDNToLocal(msisdn string) string {
-	msisdn = m.trim(msisdn)
-	if !m.isMSISDN(msisdn) {
+	msisdn = trim(msisdn)
+	if !isMSISDN(msisdn) {
 		return ""
 	}
 	if strings.HasPrefix(msisdn, "1800") {
@@ -108,22 +126,6 @@ func (m *MSISDN) getProvider() string {
 	return ""
 }
 
-func (m *MSISDN) isMSISDN(s string) bool {
-	if strings.HasPrefix(s, "1800") {
-		return true
-	}
-	for _, country := range countries {
-		if strings.HasPrefix(s, country.countryCode) {
-			err := m.Parse(s)
-			if err != nil {
-				return false
-			}
-			return true
-		}
-	}
-	return false
-}
-
 func (m *MSISDN) isLandLine() bool {
 	if strings.HasPrefix(m.msisdn, "1800") {
 		return true
@@ -154,9 +156,4 @@ func (m *MSISDN) validate() bool {
 		return false
 	}
 	return true
-}
-
-func (m *MSISDN) trim(s string) string {
-	notWordRE := regexp.MustCompile(`[\W_]`)
-	return notWordRE.ReplaceAllString(s, "")
 }

@@ -79,6 +79,14 @@ func (m *MSISDN) GetCountryCode() string {
 	return m.countryCode
 }
 
+func (m *MSISDN) GetAreaCode() string {
+	country, ok := countries[m.countryCode]
+	if !ok {
+		return ""
+	}
+	return country.areaCode
+}
+
 //
 func (m *MSISDN) IsLandLine() bool {
 	return m.landline

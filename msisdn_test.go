@@ -79,3 +79,21 @@ func Test_GetLocalFormatted(t *testing.T) {
 		assert.Equal(t, localFormatted, m.GetLocalFormatted())
 	}
 }
+
+func TestLandLine(t *testing.T) {
+	testMap := map[string]bool{
+		"+600392123128": true,
+		"+60392123128":  true,
+		"+6538268423":   false, // Singapore VoIP
+		"+6561234123":   true,  // Singapore Landline
+		"+6588268423":   false, // Singapore Mobile
+		"+6591234123":   false, // Singapore Mobile
+	}
+	for msisdn, isLandline := range testMap {
+		m, err := ParseMSISDN(msisdn)
+		if err != nil {
+			panic(err)
+		}
+		assert.Equal(t, isLandline, m.IsLandLine())
+	}
+}

@@ -15,6 +15,31 @@ import (
 // 	"github.com/stretchr/testify/assert"
 // )
 
+func Test_GetLocal(t *testing.T) {
+	testMap := map[string]string{
+		"+60312341234":    "0312341234",  // Malaysia
+		"+6031231234":     "031231234",   // Malaysia
+		"+605208 500":     "05208500",    // Malaysia
+		"+605208 5000":    "052085000",   // Malaysia
+		"+6081123123":     "081123123",   // Malaysia
+		"+60111231234":    "0111231234",  // Malaysia
+		"+601112341234":   "01112341234", // Malaysia
+		"+6011-1234 1234": "01112341234", // Malaysia
+		"+601112328670":   "01112328670", // Malaysia
+		"+6531234567":     "31234567",    // Singapore
+		"+6567895741":     "67895741",    // Singapore
+		"+6588262323":     "88262323",    // Singapore
+		"+6598268423":     "98268423",    // Singapore
+	}
+	for msisdnStr, localFormatted := range testMap {
+		m, err := ParseMSISDN(msisdnStr)
+		if err != nil {
+			panic(err)
+		}
+		assert.Equal(t, localFormatted, m.GetLocal())
+	}
+}
+
 func Test_GetLocalFormatted(t *testing.T) {
 	testMap := map[string]string{
 		"+60312341234":    "03-1234 1234",  // Malaysia

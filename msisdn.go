@@ -86,15 +86,28 @@ func (m *MSISDN) GetLocal() string {
 	if strings.HasPrefix(msisdn, "1800") {
 		return msisdn
 	}
-
-	for _, country := range countries {
-		code := country.countryCode
-		if strings.HasPrefix(msisdn, code) {
-			return country.localPrefix + msisdn[len(code):]
-		}
+	code := m.countryCode
+	country, ok := countries[code]
+	if !ok {
+		return ""
 	}
+	return country.localPrefix + msisdn[len(code):]
+}
 
-	return ""
+func (m *MSISDN) GetLocalFormatted() string {
+	code := m.countryCode
+	country, ok := countries[code]
+	if !ok {
+		return ""
+	}
+	local := m.GetLocal()
+	if local == "" {
+		return ""
+	}
+	for _, format := range country.localFormats {
+		local = format.find.ReplaceAllString(local, format.replace)
+	}
+	return local
 }
 
 func (m *MSISDN) getCountryCode() string {

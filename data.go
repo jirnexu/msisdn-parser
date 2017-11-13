@@ -1,9 +1,19 @@
 package msisdn
 
+import (
+	"regexp"
+)
+
+type phoneFormat struct {
+	find    *regexp.Regexp
+	replace string
+}
+
 type country struct {
-	providers   []provider
-	countryCode string
-	localPrefix string
+	providers    []provider
+	countryCode  string
+	localPrefix  string
+	localFormats []phoneFormat
 
 	minLength int
 	maxLength int
@@ -25,6 +35,16 @@ func init() {
 			localPrefix: "0",
 			minLength:   8,
 			maxLength:   12,
+			localFormats: []phoneFormat{
+				{
+					find:    regexp.MustCompile(`^(0[3-9]{1,2}|01[1-9])(\d{4})(\d{4})$`),
+					replace: `$1-$2 $3`,
+				},
+				{
+					find:    regexp.MustCompile(`^(0[3-9]{1,2}|01[1-9])(\d{3})(\d{3,4})$`),
+					replace: `$1-$2 $3`,
+				},
+			},
 			providers: []provider{
 				// 7-digit numbers
 				{startRange: 60100000000, endRange: 60109999999, name: "Digi Telecommunications Sdn Bhd"},
@@ -131,12 +151,31 @@ func init() {
 		},
 		"ID": {
 			countryCode: "62",
+			localPrefix: "",
+			minLength:   8,
+			maxLength:   12,
+			localFormats: []phoneFormat{
+				{
+					find:    regexp.MustCompile(`^(\d{3})(\d{3})(\d{4})$`),
+					replace: `$1 $2 $3`, // +62 yyy xxx xxxx
+				},
+				{
+					find:    regexp.MustCompile(`^(\d{3})(\d{4})(\d{4})$`),
+					replace: `$1 $2 $3`, // +62 yyy xxxx xxxx
+				},
+			},
 		},
 		"SG": {
 			countryCode: "65",
 			localPrefix: "",
 			minLength:   8,
 			maxLength:   12,
+			localFormats: []phoneFormat{
+				{
+					find:    regexp.MustCompile(`^(\d{4})(\d{4})$`),
+					replace: `$1 $2`,
+				},
+			},
 		},
 	}
 }

@@ -33,11 +33,11 @@ var countries = map[string]*country{
 		maxLength:   12,
 		localFormats: []phoneFormat{
 			{
-				find:    regexp.MustCompile(`^(0[3-9]{1,2}|01[1-9])(\d{4})(\d{4})$`),
+				find:    regexp.MustCompile(`^(0[345679]|08[0-9]|01[0-9])(\d{4})(\d{4})$`),
 				replace: `$1-$2 $3`,
 			},
 			{
-				find:    regexp.MustCompile(`^(0[3-9]{1,2}|01[1-9])(\d{3})(\d{3,4})$`),
+				find:    regexp.MustCompile(`^(0[345679]|08[0-9]|01[0-9])(\d{3})(\d{3,4})$`),
 				replace: `$1-$2 $3`,
 			},
 		},

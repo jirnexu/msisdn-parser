@@ -123,9 +123,10 @@ func (m *MSISDN) GetLocalFormatted() string {
 }
 
 func (m *MSISDN) getCountryCode() string {
-	prefix := m.msisdn[:2]
+	twoDigitsAreaCode := m.msisdn[:2]
+	threeDigitsAreaCode := m.msisdn[:3]
 	for cc, country := range countries {
-		if prefix == country.areaCode {
+		if twoDigitsAreaCode == country.areaCode || threeDigitsAreaCode == country.areaCode {
 			return cc
 		}
 	}
@@ -160,6 +161,15 @@ func (m *MSISDN) isLandLine() bool {
 		}
 	case "SG":
 		return strings.HasPrefix(m.msisdn, "656")
+	case "JP":
+		// FIXME: landline prefix for JP?
+		return strings.HasPrefix(m.msisdn, "81")
+	case "AU":
+		// FIXME: landline prefix for AU?
+		return strings.HasPrefix(m.msisdn, "61")
+	case "HK":
+		// FIXME: landline prefix for HK?
+		return strings.HasPrefix(m.msisdn, "852")
 	default:
 		return false
 	}

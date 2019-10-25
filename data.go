@@ -173,4 +173,40 @@ var countries = map[string]*country{
 			},
 		},
 	},
+	"AU": {
+		areaCode:    "61",
+		localPrefix: "",
+		minLength:   8,
+		maxLength:   12,
+		localFormats: []phoneFormat{
+			{
+				find:    regexp.MustCompile(`^(4|5)(\d{4})(\d{4})$`),
+				replace: `0$1 $2 $3`, // 0(4|5) yyyy xxxx
+			},
+		},
+	},
+	"HK": {
+		areaCode:    "852",
+		localPrefix: "",
+		minLength:   8,
+		maxLength:   11,
+		localFormats: []phoneFormat{
+			{
+				find:    regexp.MustCompile(`^(4|5|6|7|8|9)(\d{4})(\d{4})$`),
+				replace: `0$1 $2 $3`, // 0(4|5|6|7|8|9) yyyy xxxx
+			},
+		},
+	},
+	"JP": {
+		areaCode:    "81",
+		localPrefix: "",
+		minLength:   11,
+		maxLength:   14,
+		localFormats: []phoneFormat{
+			{
+				find:    regexp.MustCompile(`^(70|80|90)(\d{4})(\d{4})$`),
+				replace: `0$1 $2 $3`, // 0(7|8|9) yyyy xxxx
+			},
+		},
+	},
 }

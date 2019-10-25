@@ -28,6 +28,13 @@ func Test_Parse(t *testing.T) {
 		}
 		assert.Equal(t, "6588262323", m.GetMSISDN())
 	}
+	{
+		m, err := Parse("498765432", "AU")
+		if err != nil {
+			panic(err)
+		}
+		assert.Equal(t, "61498765432", m.GetMSISDN())
+	}
 }
 
 func Test_GetLocal(t *testing.T) {
